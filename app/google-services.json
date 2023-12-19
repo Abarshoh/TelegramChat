@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "732723478441",
+    "project_id": "telegram-2f628",
+    "storage_bucket": "telegram-2f628.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:732723478441:android:f90726a942ae1173298eb8",
+        "android_client_info": {
+          "package_name": "uz.akbar.chatting"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFEkulnPGk9ykFD5p0VkDqlqdorEh-pMM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
