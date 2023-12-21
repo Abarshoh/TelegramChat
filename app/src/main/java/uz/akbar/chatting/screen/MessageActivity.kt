@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,13 +39,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.graphics.Color.Companion.Gray
+import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -66,8 +72,7 @@ class MessageActivity : ComponentActivity() {
             ChattingTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
 
                     val messageList = remember {
@@ -80,36 +85,72 @@ class MessageActivity : ComponentActivity() {
 
                     val uid = intent.getStringExtra("uid")
                     val useruid = intent.getStringExtra("useruid")
+                    val user = intent.getSerializableExtra("user") as UserData
                     val m = Message(useruid, uid, text.value.text, getDate())
 
-                    val reference = Firebase.database.reference.child("users")
-                        .child(uid ?: "")
-                        .child("message")
-                        .child(useruid ?: "")
+                    val reference =
+                        Firebase.database.reference.child("users").child(uid ?: "").child("message")
+                            .child(useruid ?: "")
 
-                    reference.addValueEventListener(
-                        object : ValueEventListener {
-                            override fun onDataChange(snapshot: DataSnapshot) {
-                                val m = snapshot.children
-                                messageList.clear()
-                                m.forEach {
-                                    val message = it.getValue(Message::class.java)
-                                    if (message != null) {
-                                        messageList.add(message)
-                                    }
+                    reference.addValueEventListener(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            val m = snapshot.children
+                            messageList.clear()
+                            m.forEach {
+                                val message = it.getValue(Message::class.java)
+                                if (message != null) {
+                                    messageList.add(message)
                                 }
                             }
-
-                            override fun onCancelled(error: DatabaseError) {
-                                Log.d("TAG", "error:${error.message}")
-                            }
                         }
-                    )
+
+                        override fun onCancelled(error: DatabaseError) {
+                            Log.d("TAG", "error:${error.message}")
+                        }
+                    })
 
 
 
 
                     Column(Modifier.fillMaxSize()) {
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .size(80.dp)
+                                .background(LightGray)
+                        ) {
+
+                            Image(painter = painterResource(id = R.drawable.back),
+                                contentDescription = null,
+                                Modifier
+                                    .size(40.dp)
+                                    .padding(horizontal = 6.dp)
+                                    .align(Alignment.CenterVertically)
+                                    .clickable {
+                                        onBackPressed()
+                                    })
+
+                            AsyncImage(
+                                model = ImageRequest.Builder(LocalContext.current).data(user.photo)
+                                    .crossfade(true).build(),
+                                placeholder = painterResource(R.drawable.logo),
+                                contentDescription = ("no image"),
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .size(40.dp)
+                                    .align(Alignment.CenterVertically)
+                            )
+                            Text(
+                                text = user.name ?: "asdasdasd",
+                                Modifier.padding(start = 12.dp)
+                                    .align(Alignment.CenterVertically),
+
+                                fontSize = 22.sp
+                            )
+
+
+                        }
                         LazyColumn(
                             Modifier
                                 .fillMaxWidth()
@@ -219,6 +260,7 @@ class MessageActivity : ComponentActivity() {
 
         }
     }
+
     fun getDate(): String {
         val d = Date()
         val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy hh:mm")
@@ -252,16 +294,13 @@ fun ChatTopBar(user: MutableState<UserData>, name: MutableState<String>) {
         ) {
             Text(
                 name.value,
-                fontSize =16.sp,
+                fontSize = 16.sp,
                 color = uz.akbar.chatting.ui.theme.Text,
                 fontWeight = FontWeight.SemiBold,
                 maxLines = 1
-                )
+            )
             Text(
-                "@${user.value.name}",
-                color = Text3,
-                fontWeight = FontWeight.Light,
-                maxLines = 1
+                "@${user.value.name}", color = Text3, fontWeight = FontWeight.Light, maxLines = 1
             )
         }
         Box(modifier = Modifier.padding(6.dp)) {
