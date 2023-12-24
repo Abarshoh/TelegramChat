@@ -117,14 +117,14 @@ class MessageActivity : ComponentActivity() {
                             Modifier
                                 .fillMaxWidth()
                                 .size(80.dp)
-                                .background(LightGray)
+                                .background(Color(0xFF00A2FF))
                         ) {
 
                             Image(painter = painterResource(id = R.drawable.back),
                                 contentDescription = null,
                                 Modifier
-                                    .size(40.dp)
-                                    .padding(horizontal = 6.dp)
+                                    .size(60.dp)
+                                    .padding(horizontal = 10.dp)
                                     .align(Alignment.CenterVertically)
                                     .clickable {
                                         onBackPressed()
@@ -146,7 +146,10 @@ class MessageActivity : ComponentActivity() {
                                 Modifier.padding(start = 12.dp)
                                     .align(Alignment.CenterVertically),
 
-                                fontSize = 22.sp
+
+                                fontSize = 22.sp,
+                                color = White,
+
                             )
 
 
@@ -230,7 +233,7 @@ class MessageActivity : ComponentActivity() {
                             )
 
 
-                            Image(painter = painterResource(id = R.drawable.send),
+                            Image(painter = painterResource(id = R.drawable.jonatish),
                                 contentDescription = null,
                                 Modifier
                                     .size(40.dp)
@@ -267,46 +270,4 @@ class MessageActivity : ComponentActivity() {
         return simpleDateFormat.format(d)
     }
 }
-
-@Composable
-fun ChatTopBar(user: MutableState<UserData>, name: MutableState<String>) {
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier
-            .height(80.dp)
-            .fillMaxWidth()
-            .padding(vertical = 16.dp, horizontal = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Image(painter = painterResource(id = R.drawable.user),
-            contentDescription = "",
-            Modifier
-                .clip(
-                    CircleShape
-                )
-                .clickable { /*TODO*/ })
-        Column(
-            Modifier
-                .weight(1f)
-                .padding(horizontal = 8.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                name.value,
-                fontSize = 16.sp,
-                color = uz.akbar.chatting.ui.theme.Text,
-                fontWeight = FontWeight.SemiBold,
-                maxLines = 1
-            )
-            Text(
-                "@${user.value.name}", color = Text3, fontWeight = FontWeight.Light, maxLines = 1
-            )
-        }
-        Box(modifier = Modifier.padding(6.dp)) {
-
-        }
-    }
-}
-
 

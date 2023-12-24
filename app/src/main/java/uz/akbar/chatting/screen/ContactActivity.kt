@@ -10,11 +10,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -22,6 +24,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ExitToApp
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +32,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,7 +53,7 @@ import com.google.firebase.ktx.Firebase
 import uz.akbar.chatting.R
 import uz.akbar.chatting.model.UserData
 import uz.akbar.chatting.screen.ui.theme.ChattingTheme
-import uz.akbar.chatting.ui.theme.PurpleGrey40
+
 
 class ContactActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,8 +67,7 @@ class ContactActivity : ComponentActivity() {
                 ) {
                     val uid = intent.getStringExtra("uid")
 
-                    val userList = remember {
-                        mutableStateListOf(UserData())
+                    val userList = remember { mutableStateListOf(UserData())
                     }
 
                     val reference = Firebase.database.reference.child("users")
@@ -87,7 +90,33 @@ class ContactActivity : ComponentActivity() {
 
                     })
                     Column(Modifier.fillMaxSize()) {
-                        ContactTopBar()
+                        Row(
+                            Modifier
+                                .height(60.dp)
+                                .background(color = Color(0xFF00A2FF))
+                                .fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            IconButton(
+                                onClick={
+                                    val intent = Intent(this@ContactActivity, ProfileActivity::class.java)
+                                    intent.putExtra("uid", uid )
+                                    startActivity(intent)
+
+                                },
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .size(60.dp)
+                            ){
+                                Icon(Icons.Rounded.Settings, contentDescription = "", tint = Color.White)
+                            }
+
+                            Text(text = "Messenger", color = Color.White, fontSize = 25.sp)
+                            Spacer(modifier = Modifier
+                                .width(30.dp))
+
+                        }
                         LazyColumn() {
                             items(userList) {
                                 Row(
@@ -100,7 +129,7 @@ class ContactActivity : ComponentActivity() {
                                                 MessageActivity::class.java
                                             )
                                             i.putExtra("uid", uid)
-                                            i.putExtra("user",it)
+                                            i.putExtra("user", it)
                                             i.putExtra("useruid", it.uid)
                                             startActivity(i)
                                         },
@@ -127,35 +156,6 @@ class ContactActivity : ComponentActivity() {
                     }
 
                 }
-            }
-        }
-    }
-
-    @Composable
-    private fun ContactTopBar() {
-        Row(
-            Modifier
-                .height(60.dp)
-                .background(color = Color.Blue)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            IconButton(
-                onClick={
-
-                },
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .size(60.dp)
-            ){
-                Icon(Icons.Rounded.Settings, contentDescription = "")
-            }
-            Text(text = "Telegram", color = Color.White, fontSize = 25.sp)
-            Button(onClick = {
-
-            }, Modifier.size(60.dp)) {
-                Icon(Icons.Rounded.ExitToApp, contentDescription = "")
             }
         }
     }

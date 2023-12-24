@@ -61,7 +61,7 @@ fun AppContent(context: Context) {
         contentAlignment = Alignment.Center
     ) {
 
-        Image(painter = painterResource(id = R.drawable.logo), contentDescription = null, modifier = Modifier.size(200.dp), contentScale = ContentScale.Crop)
+        Image(painter = painterResource(id = R.drawable.messanger), contentDescription = null, modifier = Modifier.size(200.dp), contentScale = ContentScale.Crop)
 
     }
 }

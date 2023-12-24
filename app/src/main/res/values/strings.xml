@@ -4,4 +4,5 @@
     <string name="title_activity_message">MessageActivity</string>
     <string name="client_id">732723478441-ou6041oio1cb2bk18hkg33vt1beob9pu.apps.googleusercontent.com</string>
     <string name="title_activity_splash">SplashActivity</string>
+    <string name="title_activity_profile">ProfileActivity</string>
 </resources>
