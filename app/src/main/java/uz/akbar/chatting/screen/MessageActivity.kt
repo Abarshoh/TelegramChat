@@ -86,7 +86,7 @@ class MessageActivity : ComponentActivity() {
                     val uid = intent.getStringExtra("uid")
                     val useruid = intent.getStringExtra("useruid")
                     val user = intent.getSerializableExtra("user") as UserData
-                    val m = Message(useruid, uid, text.value.text, getDate())
+                    val messagee = Message(useruid, uid, text.value.text, getDate())
 
                     val reference =
                         Firebase.database.reference.child("users").child(uid ?: "").child("message")
@@ -94,9 +94,9 @@ class MessageActivity : ComponentActivity() {
 
                     reference.addValueEventListener(object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
-                            val m = snapshot.children
+                            val xabar = snapshot.children
                             messageList.clear()
-                            m.forEach {
+                            xabar.forEach {
                                 val message = it.getValue(Message::class.java)
                                 if (message != null) {
                                     messageList.add(message)
@@ -247,13 +247,13 @@ class MessageActivity : ComponentActivity() {
                                             .child("message")
                                             .child(useruid ?: "")
                                             .child(key)
-                                            .setValue(m)
+                                            .setValue(messagee)
                                         reference
                                             .child(useruid ?: "")
                                             .child("message")
                                             .child(uid ?: "")
                                             .child(key)
-                                            .setValue(m)
+                                            .setValue(messagee)
                                     })
                         }
                     }
